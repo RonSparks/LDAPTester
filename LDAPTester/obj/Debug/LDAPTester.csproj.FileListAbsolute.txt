@@ -7,3 +7,13 @@ C:\Users\ronsparks\source\repos\WindowsFormsApp1\LDAPTester\bin\Debug\LDAPTester
 C:\Users\ronsparks\source\repos\WindowsFormsApp1\LDAPTester\obj\Debug\LDAPTester.formLdapTest.resources
 C:\Users\ronsparks\source\repos\WindowsFormsApp1\LDAPTester\obj\Debug\LDAPTester.exe
 C:\Users\ronsparks\source\repos\WindowsFormsApp1\LDAPTester\obj\Debug\LDAPTester.pdb
+C:\Users\ronsparks\Workspace\GitHub\LDAPTester\LDAPTester\bin\Debug\LDAPTester.exe.config
+C:\Users\ronsparks\Workspace\GitHub\LDAPTester\LDAPTester\bin\Debug\LDAPTester.exe
+C:\Users\ronsparks\Workspace\GitHub\LDAPTester\LDAPTester\bin\Debug\LDAPTester.pdb
+C:\Users\ronsparks\Workspace\GitHub\LDAPTester\LDAPTester\obj\Debug\LDAPTester.formLdapTest.resources
+C:\Users\ronsparks\Workspace\GitHub\LDAPTester\LDAPTester\obj\Debug\LDAPTester.Properties.Resources.resources
+C:\Users\ronsparks\Workspace\GitHub\LDAPTester\LDAPTester\obj\Debug\LDAPTester.csproj.GenerateResource.Cache
+C:\Users\ronsparks\Workspace\GitHub\LDAPTester\LDAPTester\obj\Debug\LDAPTester.csproj.CoreCompileInputs.cache
+C:\Users\ronsparks\Workspace\GitHub\LDAPTester\LDAPTester\obj\Debug\LDAPTester.exe
+C:\Users\ronsparks\Workspace\GitHub\LDAPTester\LDAPTester\obj\Debug\LDAPTester.pdb
+C:\Users\ronsparks\Workspace\GitHub\LDAPTester\LDAPTester\obj\Debug\LDAPTester.csprojResolveAssemblyReference.cache
