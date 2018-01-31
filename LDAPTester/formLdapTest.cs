@@ -3,11 +3,18 @@ using System.Windows.Forms;
 using System.DirectoryServices.Protocols;
 using System.DirectoryServices.AccountManagement;
 using System.DirectoryServices;
+using System.Security.Cryptography.X509Certificates;
 
 namespace LDAPTester
 {
     public partial class formLdapTest : Form
     {
+
+        private const string LDAP_QUALIFIER = @"LDAP://";
+        private const string LDAPS_QUALIFIER = @"LDAPS://";
+        private const string SECURE_PORT = "636";
+        private const string UNSECURE_PORT = "389";
+
         public formLdapTest()
         {
             InitializeComponent();
@@ -18,15 +25,13 @@ namespace LDAPTester
             ResetForm();
         }
 
-        private void ResetForm ()
+        //added to hopefully ignore certiicate errors on the dev ldap instance for SSL
+        public static X509Certificate ClientCertFinder(LdapConnection connection,
+                                                byte[][] trustedCAs)
         {
-            txtHost.Text = "ldap.forumsys.com";
-            txtBaseDn.Text = "uid=euclid,dc=example,dc=com";
-            txtPortNum.Text = "389";
-            txtUserPassword.Text = "password";
-            txtTestOutput.Text = "";
-            txtDetail.Text = "";
+            return null;
         }
+
         private void btnTestConnection_Click(object sender, EventArgs e)
         {
             try
@@ -44,7 +49,14 @@ namespace LDAPTester
 
                 txtTestOutput.Text += DateTime.Now.ToString() + " Connecting to host";
                 LdapDirectoryIdentifier ldi = new LdapDirectoryIdentifier(host, port);
+
                 LdapConnection ldapConnection = new LdapConnection(ldi);
+
+                if (checkBox1.Checked)
+                {
+                    ldapConnection.SessionOptions.QueryClientCertificate = new QueryClientCertificateCallback(ClientCertFinder);
+                    //ldapConnection.SessionOptions.VerifyServerCertificate = new VerifyServerCertificateCallback((con, cer) => true);
+                }
 
                 txtTestOutput.Text +=  " - Success! \r\n\r\n";
                 txtTestOutput.Text += DateTime.Now.ToString() + " Authenticating user";
@@ -87,6 +99,7 @@ namespace LDAPTester
 
         private void button1_Click(object sender, EventArgs e)
         {
+            //wanna not only verify user credentials, but also get/retreive the uer name from AD server.
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
@@ -94,7 +107,7 @@ namespace LDAPTester
                 txtDetail.Text = "";
 
                 int port = Convert.ToInt32(txtPortNum.Text);
-                string host = "LDAP://" +  @txtHost.Text + (port > 0 ? ":" + port : "");
+                string host = checkBox1.Checked ? LDAPS_QUALIFIER : LDAP_QUALIFIER +  @txtHost.Text + (port > 0 ? ":" + port : "");
                 string baseDn = txtBaseDn.Text;
                 string password = txtUserPassword.Text;
 
@@ -102,13 +115,16 @@ namespace LDAPTester
                 DirectoryEntry myLdapConnection = createDirectoryEntry(host, baseDn, password);
                 DirectorySearcher search = new DirectorySearcher(myLdapConnection)
                 {
-                    Filter = baseDn
+                    Filter = "(&" +
+                        "(objectClass=user)" +
+                        "(cn=t*)" +
+                    ")"
                 };
 
                 txtTestOutput.Text += " - Success! \r\n\r\n";
                 txtTestOutput.Text += DateTime.Now.ToString() + " Authenticating user";
 
-                string[] requiredProperties = new string[] { "cn", "mail" };
+                string[] requiredProperties = new string[] { "cn"};
 
                 foreach (String property in requiredProperties)
                     search.PropertiesToLoad.Add(property);
@@ -150,9 +166,86 @@ namespace LDAPTester
             {
                 Username =userName,
                 Password = password,
-                AuthenticationType = AuthenticationTypes.None
+                AuthenticationType = checkBox1.Checked ? AuthenticationTypes.Secure : AuthenticationTypes.None
             };
             return ldapConnection;
+        }
+
+        private void ResetForm()
+        {
+            txtHost.Text = "ldap.forumsys.com";
+            txtBaseDn.Text = "uid=euclid,dc=example,dc=com";
+            txtPortNum.Text = UNSECURE_PORT;
+            txtUserPassword.Text = "password";
+            txtTestOutput.Text = "";
+            txtDetail.Text = "";
+            checkBox1.Checked = false;
+        }
+
+        private void btnTestCreds1_Click(object sender, EventArgs e)
+        {
+            ResetForm();
+        }
+
+        private void btnTestCreds2_Click(object sender, EventArgs e)
+        {
+            txtHost.Text = "52.23.194.20";
+            txtBaseDn.Text = "cn=tpatterson,cn=hfcadmins,ou=nps,dc=doi,dc=net";  //alternate cn=sparks,cn=hfcadmins,ou=nps,dc=doi,dc=net"
+            txtPortNum.Text = UNSECURE_PORT;
+            txtUserPassword.Text = "H00ah2018~!"; //alternate password for sparks = password
+            txtTestOutput.Text = "";
+            txtDetail.Text = "";
+            checkBox1.Checked = false;
+        }
+
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
+            txtPortNum.Text = (checkBox1.Checked) ? SECURE_PORT : UNSECURE_PORT;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtBaseDn_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtDetail_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtTestOutput_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void txtUserPassword_TextChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label7_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
