@@ -47,25 +47,27 @@ namespace LDAPTester
                 string host = @txtHost.Text;
                 string baseDn = txtBaseDn.Text;
                 string password = txtUserPassword.Text;
+                string userCN = "cn=" + txtUserCn.Text;
 
                 Cursor.Current = Cursors.WaitCursor;
 
                 txtTestOutput.Text += DateTime.Now.ToString() + " Connecting to host";
 
-                LdapDirectoryIdentifier ldi = new LdapDirectoryIdentifier(host, port);
-                LdapConnection ldapConnection = new LdapConnection(ldi);
+                LdapDirectoryIdentifier ldi = new LdapDirectoryIdentifier(host);
+                LdapConnection ldapConnection = new LdapConnection(ldi)
+                {
+                    AuthType = AuthType.Basic,
+                };
 
-                ldapConnection.SessionOptions.QueryClientCertificate = new QueryClientCertificateCallback(ClientCertFinder);
+                //ldapConnection.SessionOptions.QueryClientCertificate = new QueryClientCertificateCallback(ClientCertFinder);
                 ldapConnection.SessionOptions.VerifyServerCertificate += (conn, cert) => { return true; };
-                //ldapConnection.SessionOptions.VerifyServerCertificate = new VerifyServerCertificateCallback((con, cer) => true);
                 ldapConnection.SessionOptions.SecureSocketLayer = true;
-                ldapConnection.AuthType = AuthType.Negotiate;
+                ldapConnection.SessionOptions.ProtocolVersion = 3;
 
                 txtTestOutput.Text += " - Success! \r\n\r\n";
                 txtTestOutput.Text += DateTime.Now.ToString() + " Authenticating user";
 
-                ldapConnection.SessionOptions.ProtocolVersion = 3;
-                NetworkCredential nc = new NetworkCredential(baseDn, password);
+                NetworkCredential nc = new NetworkCredential(userCN + "," + baseDn, password);
                 ldapConnection.Bind(nc);
 
                 txtDetail.Text = "SSL for encryption is enabled\nSSL information:" + "Cipher strength: " + ldapConnection.SessionOptions.SslInformation.CipherStrength.ToString() + Environment.NewLine;
@@ -109,9 +111,10 @@ namespace LDAPTester
                 string password = txtUserPassword.Text;
                 string UserCn = txtUserCn.Text;
                 bool startTLS = chkStartTLS.Checked ? true : false;
+                bool useCN = radioButton1.Checked;
 
-                string fullyQualifiedUser = "cn=" + UserCn + "," + baseDn;
-         
+                string fullyQualifiedUser = (useCN ? "cn=" : "uid=") + UserCn + "," + baseDn;
+
                 Cursor.Current = Cursors.WaitCursor;
 
                 var password1 = password.ToCharArray();
@@ -128,12 +131,19 @@ namespace LDAPTester
 
                 txtTestOutput.Text += "Searching in " + baseOfSearch + "..." + Environment.NewLine;
                 var searchFilter = "uid=*";
-                var attributesToLoad = new[] { "uid", "givenName", "sn" };
+                var attributesToLoad =  txtAttributesToLoad.Text.Split(',');
                 var pagedSearchResults = openLDAPHelper.PagedSearch(searchFilter, attributesToLoad);
 
                 foreach (var searchResultEntryCollection in pagedSearchResults)
                     foreach (SearchResultEntry searchResultEntry in searchResultEntryCollection)
-                       txtDetail.Text += searchResultEntry.Attributes["uid"][0] + " " + searchResultEntry.Attributes["givenName"][0] + " " + searchResultEntry.Attributes["sn"][0] + Environment.NewLine;
+                    {
+                        foreach (var attribute in attributesToLoad)
+                        {
+                            if (searchResultEntry.Attributes[attribute] != null) txtDetail.Text += searchResultEntry.Attributes[attribute][0].ToString() + " ";
+                        }
+                        txtDetail.Text += Environment.NewLine;
+                    }
+                        
 
                 txtTestOutput.Text += "Search Complete.  Results below. " + Environment.NewLine;
 
@@ -262,13 +272,16 @@ namespace LDAPTester
         private void ResetForm()
         {
             txtHost.Text = "ldap.forumsys.com";
-            txtBaseDn.Text = "uid=euclid,dc=example,dc=com";
+            txtBaseDn.Text = "dc=example,dc=com";
             txtUserCn.Text = "euclid";
             txtPortNum.Text = UNSECURE_PORT;
             txtUserPassword.Text = "password";
             txtTestOutput.Text = "";
             txtDetail.Text = "";
             checkBox1.Checked = false;
+            radioButton1.Checked = false;
+            radioButton2.Checked = true;
+            txtAttributesToLoad.Text = "cn,mail";
         }
 
         private void btnTestCreds1_Click(object sender, EventArgs e)
@@ -286,6 +299,9 @@ namespace LDAPTester
             txtTestOutput.Text = "";
             txtDetail.Text = "";
             checkBox1.Checked = false;
+            radioButton1.Checked = true;
+            radioButton2.Checked = false;
+            txtAttributesToLoad.Text = "uid,givenName,sn";
         }
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
@@ -341,6 +357,30 @@ namespace LDAPTester
         private void chkStartTLS_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton2.Checked)
+            {
+                radioButton1.Checked = false;
+            }
+            else
+            {
+                radioButton1.Checked = true;
+            }
+        }
+
+        private void radioButton1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (radioButton1.Checked)
+            {
+                radioButton2.Checked = false;
+            }
+            else
+            {
+                radioButton2.Checked = true;
+            }
         }
     }
 }
