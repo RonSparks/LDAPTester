@@ -47,14 +47,17 @@ namespace LDAPTester
             this.btnTestCreds2 = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.chkStartTLS = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.txtUserCn = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // btnTestConnection
             // 
-            this.btnTestConnection.Location = new System.Drawing.Point(931, 408);
-            this.btnTestConnection.Margin = new System.Windows.Forms.Padding(4);
+            this.btnTestConnection.Location = new System.Drawing.Point(349, 171);
+            this.btnTestConnection.Margin = new System.Windows.Forms.Padding(2);
             this.btnTestConnection.Name = "btnTestConnection";
-            this.btnTestConnection.Size = new System.Drawing.Size(410, 81);
+            this.btnTestConnection.Size = new System.Drawing.Size(154, 34);
             this.btnTestConnection.TabIndex = 0;
             this.btnTestConnection.Text = "Test LDAPConnection Bind";
             this.btnTestConnection.UseVisualStyleBackColor = true;
@@ -62,59 +65,59 @@ namespace LDAPTester
             // 
             // txtHost
             // 
-            this.txtHost.Location = new System.Drawing.Point(201, 147);
-            this.txtHost.Margin = new System.Windows.Forms.Padding(4);
+            this.txtHost.Location = new System.Drawing.Point(75, 62);
+            this.txtHost.Margin = new System.Windows.Forms.Padding(2);
             this.txtHost.Name = "txtHost";
-            this.txtHost.Size = new System.Drawing.Size(916, 38);
+            this.txtHost.Size = new System.Drawing.Size(346, 20);
             this.txtHost.TabIndex = 1;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(110, 154);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(41, 65);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(73, 32);
+            this.label1.Size = new System.Drawing.Size(29, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "Host";
             // 
             // txtUserPassword
             // 
-            this.txtUserPassword.Location = new System.Drawing.Point(201, 338);
-            this.txtUserPassword.Margin = new System.Windows.Forms.Padding(4);
+            this.txtUserPassword.Location = new System.Drawing.Point(349, 142);
+            this.txtUserPassword.Margin = new System.Windows.Forms.Padding(2);
             this.txtUserPassword.Name = "txtUserPassword";
             this.txtUserPassword.PasswordChar = '*';
-            this.txtUserPassword.Size = new System.Drawing.Size(1140, 38);
+            this.txtUserPassword.Size = new System.Drawing.Size(156, 20);
             this.txtUserPassword.TabIndex = 14;
             this.txtUserPassword.TextChanged += new System.EventHandler(this.txtUserPassword_TextChanged);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(44, 346);
-            this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label8.Location = new System.Drawing.Point(293, 145);
+            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(139, 32);
+            this.label8.Size = new System.Drawing.Size(53, 13);
             this.label8.TabIndex = 13;
             this.label8.Text = "Password";
             this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
             // txtBaseDn
             // 
-            this.txtBaseDn.Location = new System.Drawing.Point(201, 266);
-            this.txtBaseDn.Margin = new System.Windows.Forms.Padding(4);
+            this.txtBaseDn.Location = new System.Drawing.Point(75, 112);
+            this.txtBaseDn.Margin = new System.Windows.Forms.Padding(2);
             this.txtBaseDn.Name = "txtBaseDn";
-            this.txtBaseDn.Size = new System.Drawing.Size(1140, 38);
+            this.txtBaseDn.Size = new System.Drawing.Size(430, 20);
             this.txtBaseDn.TabIndex = 10;
             this.txtBaseDn.TextChanged += new System.EventHandler(this.txtBaseDn_TextChanged);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(110, 273);
-            this.label7.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label7.Location = new System.Drawing.Point(41, 114);
+            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(74, 32);
+            this.label7.Size = new System.Drawing.Size(29, 13);
             this.label7.TabIndex = 9;
             this.label7.Text = "Path";
             this.label7.Click += new System.EventHandler(this.label7_Click);
@@ -122,69 +125,69 @@ namespace LDAPTester
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(194, 524);
-            this.label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label9.Location = new System.Drawing.Point(73, 220);
+            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(101, 32);
+            this.label9.Size = new System.Drawing.Size(39, 13);
             this.label9.TabIndex = 16;
             this.label9.Text = "Output";
             this.label9.Click += new System.EventHandler(this.label9_Click);
             // 
             // txtTestOutput
             // 
-            this.txtTestOutput.Location = new System.Drawing.Point(201, 570);
-            this.txtTestOutput.Margin = new System.Windows.Forms.Padding(4);
+            this.txtTestOutput.Location = new System.Drawing.Point(75, 239);
+            this.txtTestOutput.Margin = new System.Windows.Forms.Padding(2);
             this.txtTestOutput.Multiline = true;
             this.txtTestOutput.Name = "txtTestOutput";
-            this.txtTestOutput.Size = new System.Drawing.Size(1140, 240);
+            this.txtTestOutput.Size = new System.Drawing.Size(430, 103);
             this.txtTestOutput.TabIndex = 15;
             this.txtTestOutput.TextChanged += new System.EventHandler(this.txtTestOutput_TextChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(194, 834);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Location = new System.Drawing.Point(73, 350);
+            this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(89, 32);
+            this.label2.Size = new System.Drawing.Size(34, 13);
             this.label2.TabIndex = 18;
             this.label2.Text = "Detail";
             this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // txtDetail
             // 
-            this.txtDetail.Location = new System.Drawing.Point(201, 882);
-            this.txtDetail.Margin = new System.Windows.Forms.Padding(4);
+            this.txtDetail.Location = new System.Drawing.Point(75, 370);
+            this.txtDetail.Margin = new System.Windows.Forms.Padding(2);
             this.txtDetail.Multiline = true;
             this.txtDetail.Name = "txtDetail";
-            this.txtDetail.Size = new System.Drawing.Size(1140, 369);
+            this.txtDetail.Size = new System.Drawing.Size(430, 157);
             this.txtDetail.TabIndex = 17;
             this.txtDetail.TextChanged += new System.EventHandler(this.txtDetail_TextChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(1126, 154);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Location = new System.Drawing.Point(422, 65);
+            this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(67, 32);
+            this.label3.Size = new System.Drawing.Size(26, 13);
             this.label3.TabIndex = 20;
             this.label3.Text = "Port";
             // 
             // txtPortNum
             // 
-            this.txtPortNum.Location = new System.Drawing.Point(1209, 147);
-            this.txtPortNum.Margin = new System.Windows.Forms.Padding(4);
+            this.txtPortNum.Location = new System.Drawing.Point(453, 62);
+            this.txtPortNum.Margin = new System.Windows.Forms.Padding(2);
             this.txtPortNum.Name = "txtPortNum";
-            this.txtPortNum.Size = new System.Drawing.Size(132, 38);
+            this.txtPortNum.Size = new System.Drawing.Size(52, 20);
             this.txtPortNum.TabIndex = 19;
             // 
             // btnReset
             // 
-            this.btnReset.Location = new System.Drawing.Point(201, 408);
-            this.btnReset.Margin = new System.Windows.Forms.Padding(4);
+            this.btnReset.Location = new System.Drawing.Point(75, 171);
+            this.btnReset.Margin = new System.Windows.Forms.Padding(2);
             this.btnReset.Name = "btnReset";
-            this.btnReset.Size = new System.Drawing.Size(156, 81);
+            this.btnReset.Size = new System.Drawing.Size(58, 34);
             this.btnReset.TabIndex = 21;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = true;
@@ -192,20 +195,22 @@ namespace LDAPTester
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(456, 408);
-            this.button1.Margin = new System.Windows.Forms.Padding(4);
+            this.button1.Location = new System.Drawing.Point(171, 171);
+            this.button1.Margin = new System.Windows.Forms.Padding(2);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(419, 81);
+            this.button1.Size = new System.Drawing.Size(157, 34);
             this.button1.TabIndex = 22;
             this.button1.Text = "Test DirectoryEntry + Search";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // btnTestCreds1
             // 
-            this.btnTestCreds1.Location = new System.Drawing.Point(591, 27);
+            this.btnTestCreds1.Location = new System.Drawing.Point(222, 11);
+            this.btnTestCreds1.Margin = new System.Windows.Forms.Padding(1);
             this.btnTestCreds1.Name = "btnTestCreds1";
-            this.btnTestCreds1.Size = new System.Drawing.Size(193, 50);
+            this.btnTestCreds1.Size = new System.Drawing.Size(72, 21);
             this.btnTestCreds1.TabIndex = 23;
             this.btnTestCreds1.Text = "ForumSys";
             this.btnTestCreds1.UseVisualStyleBackColor = true;
@@ -213,9 +218,10 @@ namespace LDAPTester
             // 
             // btnTestCreds2
             // 
-            this.btnTestCreds2.Location = new System.Drawing.Point(790, 27);
+            this.btnTestCreds2.Location = new System.Drawing.Point(296, 11);
+            this.btnTestCreds2.Margin = new System.Windows.Forms.Padding(1);
             this.btnTestCreds2.Name = "btnTestCreds2";
-            this.btnTestCreds2.Size = new System.Drawing.Size(275, 50);
+            this.btnTestCreds2.Size = new System.Drawing.Size(103, 21);
             this.btnTestCreds2.TabIndex = 24;
             this.btnTestCreds2.Text = "Dev OpenLDAP";
             this.btnTestCreds2.UseVisualStyleBackColor = true;
@@ -224,10 +230,10 @@ namespace LDAPTester
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(196, 37);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Location = new System.Drawing.Point(74, 16);
+            this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(383, 32);
+            this.label4.Size = new System.Drawing.Size(143, 13);
             this.label4.TabIndex = 25;
             this.label4.Text = "Load Testing CredentialsSet:";
             this.label4.Click += new System.EventHandler(this.label4_Click);
@@ -235,19 +241,50 @@ namespace LDAPTester
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(1142, 201);
+            this.checkBox1.Location = new System.Drawing.Point(147, 84);
+            this.checkBox1.Margin = new System.Windows.Forms.Padding(1);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(199, 36);
+            this.checkBox1.Size = new System.Drawing.Size(61, 17);
             this.checkBox1.TabIndex = 26;
-            this.checkBox1.Text = "use LDAPS";
+            this.checkBox1.Text = "LDAPS";
             this.checkBox1.UseVisualStyleBackColor = true;
             this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
             // 
+            // chkStartTLS
+            // 
+            this.chkStartTLS.AutoSize = true;
+            this.chkStartTLS.Location = new System.Drawing.Point(75, 84);
+            this.chkStartTLS.Name = "chkStartTLS";
+            this.chkStartTLS.Size = new System.Drawing.Size(68, 17);
+            this.chkStartTLS.TabIndex = 27;
+            this.chkStartTLS.Text = "StartTLS";
+            this.chkStartTLS.UseVisualStyleBackColor = true;
+            this.chkStartTLS.CheckedChanged += new System.EventHandler(this.chkStartTLS_CheckedChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(74, 145);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(47, 13);
+            this.label5.TabIndex = 28;
+            this.label5.Text = "User CN";
+            // 
+            // txtUserCn
+            // 
+            this.txtUserCn.Location = new System.Drawing.Point(127, 142);
+            this.txtUserCn.Name = "txtUserCn";
+            this.txtUserCn.Size = new System.Drawing.Size(130, 20);
+            this.txtUserCn.TabIndex = 29;
+            // 
             // formLdapTest
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(16F, 31F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1381, 1304);
+            this.ClientSize = new System.Drawing.Size(518, 547);
+            this.Controls.Add(this.txtUserCn);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.chkStartTLS);
             this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.btnTestCreds2);
@@ -267,7 +304,7 @@ namespace LDAPTester
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtHost);
             this.Controls.Add(this.btnTestConnection);
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "formLdapTest";
             this.Text = "formLdapTest";
             this.Load += new System.EventHandler(this.formLdapTest_Load);
@@ -297,5 +334,8 @@ namespace LDAPTester
         private System.Windows.Forms.Button btnTestCreds2;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.CheckBox chkStartTLS;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox txtUserCn;
     }
 }

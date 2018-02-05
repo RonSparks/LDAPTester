@@ -4,6 +4,8 @@ using System.DirectoryServices.Protocols;
 using System.DirectoryServices.AccountManagement;
 using System.DirectoryServices;
 using System.Security.Cryptography.X509Certificates;
+using System.Net;
+using System.Security;
 
 namespace LDAPTester
 {
@@ -32,7 +34,8 @@ namespace LDAPTester
             return null;
         }
 
-        private void btnTestConnection_Click(object sender, EventArgs e)
+
+        private void ConnectViaLDAPS()
         {
             try
             {
@@ -48,25 +51,30 @@ namespace LDAPTester
                 Cursor.Current = Cursors.WaitCursor;
 
                 txtTestOutput.Text += DateTime.Now.ToString() + " Connecting to host";
-                LdapDirectoryIdentifier ldi = new LdapDirectoryIdentifier(host, port);
 
+                LdapDirectoryIdentifier ldi = new LdapDirectoryIdentifier(host, port);
                 LdapConnection ldapConnection = new LdapConnection(ldi);
 
-                if (checkBox1.Checked)
-                {
-                    ldapConnection.SessionOptions.QueryClientCertificate = new QueryClientCertificateCallback(ClientCertFinder);
-                    //ldapConnection.SessionOptions.VerifyServerCertificate = new VerifyServerCertificateCallback((con, cer) => true);
-                }
+                ldapConnection.SessionOptions.QueryClientCertificate = new QueryClientCertificateCallback(ClientCertFinder);
+                ldapConnection.SessionOptions.VerifyServerCertificate += (conn, cert) => { return true; };
+                //ldapConnection.SessionOptions.VerifyServerCertificate = new VerifyServerCertificateCallback((con, cer) => true);
+                ldapConnection.SessionOptions.SecureSocketLayer = true;
+                ldapConnection.AuthType = AuthType.Negotiate;
 
-                txtTestOutput.Text +=  " - Success! \r\n\r\n";
+                txtTestOutput.Text += " - Success! \r\n\r\n";
                 txtTestOutput.Text += DateTime.Now.ToString() + " Authenticating user";
 
-                ldapConnection.AuthType = AuthType.Basic;
                 ldapConnection.SessionOptions.ProtocolVersion = 3;
-                System.Net.NetworkCredential nc = new System.Net.NetworkCredential(baseDn,password); 
+                NetworkCredential nc = new NetworkCredential(baseDn, password);
                 ldapConnection.Bind(nc);
 
-                txtTestOutput.Text +=  " - Success! \r\n\r\n";
+                txtDetail.Text = "SSL for encryption is enabled\nSSL information:" + "Cipher strength: " + ldapConnection.SessionOptions.SslInformation.CipherStrength.ToString() + Environment.NewLine;
+                txtDetail.Text += "Exchange strength: " + ldapConnection.SessionOptions.SslInformation.ExchangeStrength.ToString() + Environment.NewLine;
+                txtDetail.Text += "Protocol: " + ldapConnection.SessionOptions.SslInformation.Protocol.ToString() + Environment.NewLine;
+                txtDetail.Text += "Hash Strength: " + ldapConnection.SessionOptions.SslInformation.HashStrength.ToString() + Environment.NewLine;
+                txtDetail.Text += "Algorithm: " + ldapConnection.SessionOptions.SslInformation.AlgorithmIdentifier.ToString() + Environment.NewLine;
+
+                txtTestOutput.Text += " - Success! \r\n\r\n";
 
                 ldapConnection.Dispose();
                 Cursor.Current = Cursors.Default;
@@ -74,16 +82,93 @@ namespace LDAPTester
             catch (LdapException ldex)
             {
                 Cursor.Current = Cursors.Default;
-                txtTestOutput.Text +=  " - Fail! \r\n\r\n";
+                txtTestOutput.Text += " - Fail! \r\n\r\n";
                 txtTestOutput.Text += DateTime.Now.ToString() + "\r\nUnable to login:\r\n\t" + ldex.Message;
                 txtDetail.Text += ldex.ToString();
             }
             catch (Exception ex)
             {
                 Cursor.Current = Cursors.Default;
-                txtTestOutput.Text +=  " - Fail! \r\n\r\n";
-                txtTestOutput.Text += DateTime.Now.ToString() + "\r\nUnexpected exception occured:\r\n\t" + e.GetType() + ":" + ex.Message;
+                txtTestOutput.Text += " - Fail! \r\n\r\n";
+                txtTestOutput.Text += DateTime.Now.ToString() + "\r\nUnexpected exception occured:\r\n\t" + ex.GetType() + ":" + ex.Message;
                 txtDetail.Text += ex.ToString();
+            }
+        }
+
+        private void ConnectViaLDAP()
+        {
+            try
+            {
+
+                txtTestOutput.Text = "";
+                txtDetail.Text = "";
+
+                int port = Convert.ToInt32(txtPortNum.Text);
+                string host = @txtHost.Text;
+                string baseDn = txtBaseDn.Text;
+                string password = txtUserPassword.Text;
+                string UserCn = txtUserCn.Text;
+                bool startTLS = chkStartTLS.Checked ? true : false;
+
+                string fullyQualifiedUser = "cn=" + UserCn + "," + baseDn;
+         
+                Cursor.Current = Cursors.WaitCursor;
+
+                var password1 = password.ToCharArray();
+                var secureString = new SecureString();
+
+                foreach (var character in password1) secureString.AppendChar(character);
+
+                var baseOfSearch = baseDn;
+                var pageSize = 1000;
+
+                txtTestOutput.Text += "Connecting to Server as " + UserCn + (startTLS ? " using StartTLS" : "") +  " to " + host + "...." + Environment.NewLine;
+                var openLDAPHelper = new LDAPHelper(baseDn, host, port, AuthType.Basic, fullyQualifiedUser, secureString, startTLS, pageSize);
+                txtTestOutput.Text += "Connection Successful!" + Environment.NewLine + Environment.NewLine;
+
+                txtTestOutput.Text += "Searching in " + baseOfSearch + "..." + Environment.NewLine;
+                var searchFilter = "uid=*";
+                var attributesToLoad = new[] { "uid", "givenName", "sn" };
+                var pagedSearchResults = openLDAPHelper.PagedSearch(searchFilter, attributesToLoad);
+
+                foreach (var searchResultEntryCollection in pagedSearchResults)
+                    foreach (SearchResultEntry searchResultEntry in searchResultEntryCollection)
+                       txtDetail.Text += searchResultEntry.Attributes["uid"][0] + " " + searchResultEntry.Attributes["givenName"][0] + " " + searchResultEntry.Attributes["sn"][0] + Environment.NewLine;
+
+                txtTestOutput.Text += "Search Complete.  Results below. " + Environment.NewLine;
+
+                Cursor.Current = Cursors.Default;
+            }
+            catch (LdapException ldex)
+            {
+                Cursor.Current = Cursors.Default;
+                txtTestOutput.Text += " - Fail! \r\n\r\n";
+                txtTestOutput.Text += DateTime.Now.ToString() + "\r\nUnable to login:\r\n\t" + ldex.Message;
+                txtDetail.Text += ldex.ToString();
+            }
+            catch (Exception ex)
+            {
+                Cursor.Current = Cursors.Default;
+                txtTestOutput.Text += " - Fail! \r\n\r\n";
+                txtTestOutput.Text += DateTime.Now.ToString() + "\r\nUnexpected exception occured:\r\n\t" + ex.GetType() + ":" + ex.Message;
+                txtDetail.Text += ex.ToString();
+            }
+        }
+
+        private void btnTestConnection_Click(object sender, EventArgs e)
+        {
+
+            if (chkStartTLS.Checked)
+            {
+                ConnectViaLDAP();
+            }
+            else if (checkBox1.Checked)
+            {
+                ConnectViaLDAPS();
+            }
+            else
+            {
+                ConnectViaLDAP();
             }
         }
 
@@ -113,6 +198,9 @@ namespace LDAPTester
 
                 txtTestOutput.Text += DateTime.Now.ToString() + " Connecting to host";
                 DirectoryEntry myLdapConnection = createDirectoryEntry(host, baseDn, password);
+
+                if (checkBox1.Checked) myLdapConnection.AuthenticationType = AuthenticationTypes.Secure;
+
                 DirectorySearcher search = new DirectorySearcher(myLdapConnection)
                 {
                     Filter = "(&" +
@@ -175,6 +263,7 @@ namespace LDAPTester
         {
             txtHost.Text = "ldap.forumsys.com";
             txtBaseDn.Text = "uid=euclid,dc=example,dc=com";
+            txtUserCn.Text = "euclid";
             txtPortNum.Text = UNSECURE_PORT;
             txtUserPassword.Text = "password";
             txtTestOutput.Text = "";
@@ -190,9 +279,10 @@ namespace LDAPTester
         private void btnTestCreds2_Click(object sender, EventArgs e)
         {
             txtHost.Text = "52.23.194.20";
-            txtBaseDn.Text = "cn=tpatterson,cn=hfcadmins,ou=nps,dc=doi,dc=net";  //alternate cn=sparks,cn=hfcadmins,ou=nps,dc=doi,dc=net"
+            txtBaseDn.Text = "ou=users MAC,ou=users,ou=design center,ou=harpers ferry center,ou=hq,dc=nps,dc=doi,dc=net";
+            txtUserCn.Text = "thpatterson";
             txtPortNum.Text = UNSECURE_PORT;
-            txtUserPassword.Text = "H00ah2018~!"; //alternate password for sparks = password
+            txtUserPassword.Text = "H00ah2018~!";
             txtTestOutput.Text = "";
             txtDetail.Text = "";
             checkBox1.Checked = false;
@@ -244,6 +334,11 @@ namespace LDAPTester
         }
 
         private void label7_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void chkStartTLS_CheckedChanged(object sender, EventArgs e)
         {
 
         }
