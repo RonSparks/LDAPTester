@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.DirectoryServices.Protocols;
-using System.Globalization;
 using System.Net;
 using System.Security;
 
@@ -8,15 +7,21 @@ namespace LDAPTester
 {
     public class LDAPHelper
     {
-        private readonly LdapConnection ldapConnection;
+        public readonly LdapConnection ldapConnection;
         private readonly string searchBaseDN;
         private readonly int pageSize;
 
-        public LDAPHelper( string searchBaseDN, string hostName, int portNumber, AuthType authType, string connectionAccountName, SecureString connectionAccountPassword, bool startTLS, int pageSize)
+        public enum ConnectionType
+        {
+            LDAP,
+            LDAPS,
+            StartTLS
+        }
+
+        public LDAPHelper( string searchBaseDN, string hostName, int portNumber, AuthType authType, string connectionAccountName, SecureString connectionAccountPassword, ConnectionType connectionType, int pageSize)
         {
 
             var ldapDirectoryIdentifier = new LdapDirectoryIdentifier(hostName, portNumber, true, false);
-
             var networkCredential = new NetworkCredential(connectionAccountName, connectionAccountPassword);
 
             ldapConnection = new LdapConnection(ldapDirectoryIdentifier, networkCredential)
@@ -26,7 +31,7 @@ namespace LDAPTester
 
             ldapConnection.SessionOptions.ProtocolVersion = 3;
             ldapConnection.SessionOptions.VerifyServerCertificate += (conn, cert) => { return true; };  //for development only
-            if (startTLS) ldapConnection.SessionOptions.StartTransportLayerSecurity(null);
+            if (connectionType == ConnectionType.StartTLS) ldapConnection.SessionOptions.StartTransportLayerSecurity(null);
 
             ldapConnection.Bind();
 
