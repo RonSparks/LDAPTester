@@ -20,7 +20,6 @@ C:\Users\ronsparks\Workspace\GitHub\LDAPTester\LDAPTester\obj\Debug\LDAPTester.c
 C:\Workspace\GitHub\RonSparks\LDAPTester\LDAPTester\bin\Debug\LDAPTester.exe.config
 C:\Workspace\GitHub\RonSparks\LDAPTester\LDAPTester\bin\Debug\LDAPTester.exe
 C:\Workspace\GitHub\RonSparks\LDAPTester\LDAPTester\bin\Debug\LDAPTester.pdb
-C:\Workspace\GitHub\RonSparks\LDAPTester\LDAPTester\obj\Debug\LDAPTester.csprojResolveAssemblyReference.cache
 C:\Workspace\GitHub\RonSparks\LDAPTester\LDAPTester\obj\Debug\LDAPTester.formLdapTest.resources
 C:\Workspace\GitHub\RonSparks\LDAPTester\LDAPTester\obj\Debug\LDAPTester.Properties.Resources.resources
 C:\Workspace\GitHub\RonSparks\LDAPTester\LDAPTester\obj\Debug\LDAPTester.csproj.GenerateResource.Cache
@@ -33,3 +32,4 @@ C:\Workspace\GitHub\RonSparks\LDAPTester\LDAPTester\obj\Debug\LDAPTester.exe.man
 C:\Workspace\GitHub\RonSparks\LDAPTester\LDAPTester\obj\Debug\LDAPTester.application
 C:\Workspace\GitHub\RonSparks\LDAPTester\LDAPTester\bin\Debug\LDAPTester.exe.CodeAnalysisLog.xml
 C:\Workspace\GitHub\RonSparks\LDAPTester\LDAPTester\bin\Debug\LDAPTester.exe.lastcodeanalysissucceeded
+C:\Workspace\GitHub\RonSparks\LDAPTester\LDAPTester\obj\Debug\LDAPTester.csprojAssemblyReference.cache

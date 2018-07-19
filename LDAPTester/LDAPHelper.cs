@@ -18,52 +18,33 @@ namespace LDAPTester
             StartTLS
         }
 
-        public LDAPHelper( string searchBaseDN, string hostName, int portNumber, AuthType authType, string connectionAccountName, SecureString connectionAccountPassword, ConnectionType connectionType, int pageSize)
+        public LDAPHelper (LDAPConnectionInfo Info)
         {
-
-            var ldapDirectoryIdentifier = new LdapDirectoryIdentifier(hostName, portNumber, true, false);
-            var networkCredential = new NetworkCredential(connectionAccountName, connectionAccountPassword);
+            var ldapDirectoryIdentifier = new LdapDirectoryIdentifier(Info.HostName, Info.PortNumber, true, false);
+            var qualifiedUserName = Info.UserNameInNode + "=" + Info.UserName + "," + Info.BindDn;
+            var networkCredential = new NetworkCredential(qualifiedUserName, Info.Password);
 
             ldapConnection = new LdapConnection(ldapDirectoryIdentifier, networkCredential)
             {
-                AuthType = authType
+                AuthType = Info.AuthenticationType
             };
 
             ldapConnection.SessionOptions.ProtocolVersion = 3;
-            ldapConnection.SessionOptions.VerifyServerCertificate += (conn, cert) => { return true; };  //for development only
-            if (connectionType == ConnectionType.StartTLS) ldapConnection.SessionOptions.StartTransportLayerSecurity(null);
+            if (Info.VerifyServerCertificate) ldapConnection.SessionOptions.VerifyServerCertificate += (conn, cert) => { return true; };  
+            if (Info.ConnectionType == LDAPConnectionInfo.ConnType.StartTLS) ldapConnection.SessionOptions.StartTransportLayerSecurity(null);
 
             ldapConnection.Bind();
-
-            this.searchBaseDN = searchBaseDN;
-            this.pageSize = pageSize;
+            
+            this.searchBaseDN = Info.BindDn;
+            this.pageSize = Info.PageSize;
         }
 
-        public IEnumerable<SearchResultEntryCollection> PagedSearch(string searchFilter, string[] attributesToLoad)
+        public IEnumerable<SearchResultEntryCollection> GetUserInfo(string searchFilter, string[] attributesToLoad)
         {
-
-            var pagedResults = new List<SearchResultEntryCollection>();
-
+            var results = new List<SearchResultEntryCollection>();
             var searchRequest = new SearchRequest(searchBaseDN,searchFilter,SearchScope.Subtree,attributesToLoad);
-            var searchOptions = new SearchOptionsControl(SearchOption.DomainScope);
-            searchRequest.Controls.Add(searchOptions);
-
-            var pageResultRequestControl = new PageResultRequestControl(pageSize);
-            searchRequest.Controls.Add(pageResultRequestControl);
-
-            while (true)
-            {
-                var searchResponse = (SearchResponse)ldapConnection.SendRequest(searchRequest);
-                var pageResponse = (PageResultResponseControl)searchResponse.Controls[0];
-
-                yield return searchResponse.Entries;
-                if (pageResponse.Cookie.Length == 0)
-                    break;
-
-                pageResultRequestControl.Cookie = pageResponse.Cookie;
-            }
-
-
+            var searchResponse = (SearchResponse)ldapConnection.SendRequest(searchRequest);
+            yield return searchResponse.Entries;
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System.DirectoryServices.Protocols;
 using System.Security;
+using System.Configuration;
 
 namespace LDAPTester
 {
@@ -28,29 +29,25 @@ namespace LDAPTester
                 txtTestOutput.Text = "";
                 txtDetail.Text = "";
 
-                int port = Convert.ToInt32(txtPortNum.Text);
-                string host = @txtHost.Text;
-                string baseDn = txtBaseDn.Text;
-                string password = txtUserPassword.Text;
-                string UserCn = txtUserCn.Text;
-                bool startTLS = chkStartTLS.Checked ? true : false;
-                bool useCN = radioButton1.Checked;
-
-                LDAPHelper.ConnectionType connectionType = chkStartTLS.Checked ? LDAPHelper.ConnectionType.StartTLS : LDAPHelper.ConnectionType.LDAPS;
-                string fullyQualifiedUser = (useCN ? "cn=" : "uid=") + UserCn + "," + baseDn;
+                LDAPConnectionInfo info = new LDAPConnectionInfo
+                {
+                    PortNumber = Convert.ToInt32(txtPortNum.Text),
+                    BindDn = txtBaseDn.Text,
+                    HostName = @txtHost.Text,
+                    UserName = txtUserCn.Text,
+                    ConnectionType = chkStartTLS.Checked ? LDAPConnectionInfo.ConnType.StartTLS : LDAPConnectionInfo.ConnType.LDAPS,
+                    UserNameInNode = txtIdentifier.Text,
+                    Password = SecureTheString(txtUserPassword.Text),
+                    PageSize = 1000,
+                    AuthenticationType = AuthType.Basic,
+                    //info.VerifiyDevCertificate = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("verifyDevLDAPCertificate"));
+                    VerifyServerCertificate = chkCertificate.Checked
+                };
 
                 Cursor.Current = Cursors.WaitCursor;
 
-                var password1 = password.ToCharArray();
-                var secureString = new SecureString();
-
-                foreach (var character in password1) secureString.AppendChar(character);
-
-                var baseOfSearch = baseDn;
-                var pageSize = 1000;
-
-                txtTestOutput.Text += "Connecting to Server as " + UserCn + (startTLS ? " using StartTLS" : "LDAPS") +  " to " + host + "...." + Environment.NewLine;
-                var openLDAPHelper = new LDAPHelper(baseDn, host, port, AuthType.Basic, fullyQualifiedUser, secureString, connectionType, pageSize);
+                txtTestOutput.Text += "Connecting to Server as " + info.UserName + (info.ConnectionType == LDAPConnectionInfo.ConnType.StartTLS ? " using StartTLS" : " using LDAPS") + " to " + info.HostName + "...." + Environment.NewLine;
+                var openLDAPHelper = new LDAPHelper(info);
                 txtTestOutput.Text += Environment.NewLine + "Connection Successful!" + Environment.NewLine + Environment.NewLine;
 
                 txtTestOutput.Text += "--------------------------" + Environment.NewLine;
@@ -61,10 +58,10 @@ namespace LDAPTester
                 txtTestOutput.Text += "Algorithm: " + openLDAPHelper.ldapConnection.SessionOptions.SslInformation.AlgorithmIdentifier.ToString() + Environment.NewLine;
                 txtTestOutput.Text += "--------------------------" + Environment.NewLine;
 
-                txtTestOutput.Text += "Searching in " + baseOfSearch + " for " + txtAttributesToLoad.Text + "..." + Environment.NewLine;
-                var searchFilter = "uid=*";
-                var attributesToLoad =  txtAttributesToLoad.Text.Split(',');
-                var pagedSearchResults = openLDAPHelper.PagedSearch(searchFilter, attributesToLoad);
+                txtTestOutput.Text += "Searching in " + info.BindDn + " for " + txtAttributesToLoad.Text + "..." + Environment.NewLine;
+                var searchFilter = info.UserNameInNode + "=" + info.UserName;
+                var attributesToLoad = txtAttributesToLoad.Text.Split(',');
+                var pagedSearchResults = openLDAPHelper.GetUserInfo(searchFilter, attributesToLoad);
 
                 foreach (var searchResultEntryCollection in pagedSearchResults)
                     foreach (SearchResultEntry searchResultEntry in searchResultEntryCollection)
@@ -96,6 +93,16 @@ namespace LDAPTester
             }
         }
 
+        private SecureString SecureTheString(string Input)
+        {
+            var inputCharArray = Input.ToCharArray();
+            var secureString = new SecureString();
+
+            foreach (var character in inputCharArray) secureString.AppendChar(character);
+
+            return secureString;
+        }
+
         private void btnTestConnection_Click(object sender, EventArgs e)
         {
             ConnectViaLDAP();
@@ -120,11 +127,11 @@ namespace LDAPTester
             txtUserPassword.Text = "H00ah2018~!";
             txtTestOutput.Text = "";
             txtDetail.Text = "";
+            txtIdentifier.Text = "cn";
             checkBox1.Checked = false;
-            radioButton1.Checked = true;
-            radioButton2.Checked = false;
             txtAttributesToLoad.Text = "uid,givenName,sn";
             checkBox1.Checked = true;
+            chkCertificate.Checked = true;
 
         }
 
@@ -185,28 +192,9 @@ namespace LDAPTester
             checkBox1.Checked = (chkStartTLS.Checked) ? false : true;
         }
 
-        private void radioButton2_CheckedChanged(object sender, EventArgs e)
+        private void checkBox2_CheckedChanged(object sender, EventArgs e)
         {
-            if (radioButton2.Checked)
-            {
-                radioButton1.Checked = false;
-            }
-            else
-            {
-                radioButton1.Checked = true;
-            }
-        }
 
-        private void radioButton1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (radioButton1.Checked)
-            {
-                radioButton2.Checked = false;
-            }
-            else
-            {
-                radioButton2.Checked = true;
-            }
         }
     }
 }
