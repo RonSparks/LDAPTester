@@ -42,14 +42,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LDAPTester.exe" size="23992">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LDAPTester.exe" size="23480">
       <assemblyIdentity name="LDAPTester" version="1.0.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>ECsJBGKK8Va4Flkt6cIRE8mElTSXdb7xM7nhNIm7BEk=</dsig:DigestValue>
+        <dsig:DigestValue>zVYSX5wU3pXKECKTmXeDAISvkmO1JcLUSAU7D6pWHuk=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

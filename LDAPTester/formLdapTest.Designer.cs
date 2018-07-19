@@ -89,7 +89,6 @@ namespace LDAPTester
             this.txtUserPassword.PasswordChar = '*';
             this.txtUserPassword.Size = new System.Drawing.Size(207, 22);
             this.txtUserPassword.TabIndex = 8;
-            this.txtUserPassword.TextChanged += new System.EventHandler(this.txtUserPassword_TextChanged);
             // 
             // label8
             // 
@@ -99,7 +98,6 @@ namespace LDAPTester
             this.label8.Size = new System.Drawing.Size(69, 17);
             this.label8.TabIndex = 13;
             this.label8.Text = "Password";
-            this.label8.Click += new System.EventHandler(this.label8_Click);
             // 
             // txtBaseDn
             // 
@@ -108,7 +106,6 @@ namespace LDAPTester
             this.txtBaseDn.Name = "txtBaseDn";
             this.txtBaseDn.Size = new System.Drawing.Size(572, 22);
             this.txtBaseDn.TabIndex = 5;
-            this.txtBaseDn.TextChanged += new System.EventHandler(this.txtBaseDn_TextChanged);
             // 
             // label7
             // 
@@ -118,7 +115,6 @@ namespace LDAPTester
             this.label7.Size = new System.Drawing.Size(37, 17);
             this.label7.TabIndex = 9;
             this.label7.Text = "Path";
-            this.label7.Click += new System.EventHandler(this.label7_Click);
             // 
             // label9
             // 
@@ -138,7 +134,6 @@ namespace LDAPTester
             this.txtTestOutput.Name = "txtTestOutput";
             this.txtTestOutput.Size = new System.Drawing.Size(572, 260);
             this.txtTestOutput.TabIndex = 15;
-            this.txtTestOutput.TextChanged += new System.EventHandler(this.txtTestOutput_TextChanged);
             // 
             // label2
             // 
@@ -148,7 +143,6 @@ namespace LDAPTester
             this.label2.Size = new System.Drawing.Size(104, 17);
             this.label2.TabIndex = 18;
             this.label2.Text = "Search Results";
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // txtDetail
             // 
@@ -158,7 +152,6 @@ namespace LDAPTester
             this.txtDetail.Name = "txtDetail";
             this.txtDetail.Size = new System.Drawing.Size(572, 83);
             this.txtDetail.TabIndex = 17;
-            this.txtDetail.TextChanged += new System.EventHandler(this.txtDetail_TextChanged);
             // 
             // label3
             // 
@@ -274,7 +267,6 @@ namespace LDAPTester
             this.chkCertificate.TabIndex = 36;
             this.chkCertificate.Text = "Verify Server Certificate";
             this.chkCertificate.UseVisualStyleBackColor = true;
-            this.chkCertificate.CheckedChanged += new System.EventHandler(this.checkBox2_CheckedChanged);
             // 
             // formLdapTest
             // 

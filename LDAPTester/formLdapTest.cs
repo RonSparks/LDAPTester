@@ -59,16 +59,19 @@ namespace LDAPTester
                 txtTestOutput.Text += "--------------------------" + Environment.NewLine;
 
                 txtTestOutput.Text += "Searching in " + info.BindDn + " for " + txtAttributesToLoad.Text + "..." + Environment.NewLine;
+
+                //Look up user information from LDAP for display on the web page, like "Welcome Tom Patterson"
                 var searchFilter = info.UserNameInNode + "=" + info.UserName;
                 var attributesToLoad = txtAttributesToLoad.Text.Split(',');
-                var pagedSearchResults = openLDAPHelper.GetUserInfo(searchFilter, attributesToLoad);
 
-                foreach (var searchResultEntryCollection in pagedSearchResults)
-                    foreach (SearchResultEntry searchResultEntry in searchResultEntryCollection)
+                var searchResults = openLDAPHelper.GetUserInfo(searchFilter, attributesToLoad);
+
+                foreach (var searchResultEntry in searchResults)
+                    foreach (SearchResultEntry searchResult in searchResultEntry)
                     {
                         foreach (var attribute in attributesToLoad)
                         {
-                            if (searchResultEntry.Attributes[attribute] != null) txtDetail.Text += searchResultEntry.Attributes[attribute].Name + ": " + searchResultEntry.Attributes[attribute][0].ToString() + Environment.NewLine;
+                            if (searchResult.Attributes[attribute] != null) txtDetail.Text += searchResult.Attributes[attribute].Name + ": " + searchResult.Attributes[attribute][0].ToString() + Environment.NewLine;
                         }
                         txtDetail.Text += Environment.NewLine;
                     }
@@ -141,60 +144,12 @@ namespace LDAPTester
             chkStartTLS.Checked = (checkBox1.Checked) ? false : true;
         }
 
-        private void button2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtBaseDn_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtDetail_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtTestOutput_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void txtUserPassword_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label8_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label7_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void chkStartTLS_CheckedChanged(object sender, EventArgs e)
         {
             txtPortNum.Text = (!chkStartTLS.Checked) ? SECURE_PORT : UNSECURE_PORT;
             checkBox1.Checked = (chkStartTLS.Checked) ? false : true;
         }
 
-        private void checkBox2_CheckedChanged(object sender, EventArgs e)
-        {
 
-        }
     }
 }
