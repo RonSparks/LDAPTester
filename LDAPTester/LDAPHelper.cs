@@ -11,13 +11,6 @@ namespace LDAPTester
         private readonly string searchBaseDN;
         private readonly int pageSize;
 
-        public enum ConnectionType
-        {
-            LDAP,
-            LDAPS,
-            StartTLS
-        }
-
         public LDAPHelper (LDAPConnectionInfo Info)
         {
             var ldapDirectoryIdentifier = new LdapDirectoryIdentifier(Info.HostName, Info.PortNumber, true, false);
