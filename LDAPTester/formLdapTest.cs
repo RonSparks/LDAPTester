@@ -83,16 +83,12 @@ namespace LDAPTester
             catch (LdapException ldex)
             {
                 Cursor.Current = Cursors.Default;
-                txtTestOutput.Text += " - Fail! \r\n\r\n";
-                txtTestOutput.Text += "\r\nUnable to login:\r\n\t" + ldex.Message + "\r\n\r\n";
-                txtTestOutput.Text += ldex.ToString();
+                txtTestOutput.Text += " - Fail! \r\n\r\n" + "\r\nUnable to login:\r\n\t" + ldex.Message + "\r\n\r\n" + ldex.ToString();
             }
             catch (Exception ex)
             {
                 Cursor.Current = Cursors.Default;
-                txtTestOutput.Text += " - Fail! \r\n\r\n";
-                txtTestOutput.Text += "\r\nUnexpected exception occured:\r\n\t" + ex.GetType() + ":" + ex.Message + "\r\n\r\n";
-                txtTestOutput.Text += ex.ToString();
+                txtTestOutput.Text += " - Fail! \r\n\r\n" + "\r\nUnexpected exception occured:\r\n\t" + ex.GetType() + ":" + ex.Message + "\r\n\r\n" + ex.ToString();
             }
         }
 
